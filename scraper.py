@@ -15,8 +15,7 @@ from datetime import datetime
 
 class AqmthaiScraper:
 
-    scaped_pm25 = []
-    mean_list = []
+    scraped_pm25 = []
     items_list = []
     page_total = 2
 
@@ -62,7 +61,7 @@ class AqmthaiScraper:
         rows = soup.find_all('tr')
         pm25_col = rows[0].find_all('td')[1].string
         for row in rows[1:len(rows)-5]:
-            #print(row.find_all('td')[0].string, "\t", row.find_all('td')[1].string)
+            # print(row.find_all('td')[0].string, "\t", row.find_all('td')[1].string)
             date_time = row.find_all('td')[0].string
             pm25 = row.find_all('td')[1].string
             if pm25.replace('.', '', 1).isdigit():
@@ -75,31 +74,45 @@ class AqmthaiScraper:
                 pm25_col: pm25,
                 '24hr_average_PM2.5 (ug/m3)': mean_24hr
             }
-            self.scaped_pm25.append(pm25_info)
+            self.scraped_pm25.append(pm25_info)
 
     def save_data(self, stationId, endDate, endTime):
         file = 'pm25_'+stationId+'.json'
         if os.path.isfile(file):
             with open(file, 'r') as json_read:
                 unupdated_data = json.load(json_read)
-                updated_data = unupdated_data + self.scaped_pm25
+                updated_data = unupdated_data + self.scraped_pm25
                 json_read.close()
         else:
-            updated_data = self.scaped_pm25
+            updated_data = self.scraped_pm25
 
         with open(file, 'w') as json_write:
             json.dump(updated_data, json_write, indent=4)
             json_write.close()
 
         with open('last_scraping_log.json', 'w') as json_log:
-            json.dump({'lastDate': endDate, 'lastTime': endTime},
+            lastDate = self.scraped_pm25[-1]['DateTime'][:10]
+            lastTime = self.scraped_pm25[-1]['DateTime'][11:]
+            json.dump({'lastDate': lastDate, 'lastTime': lastTime},
                       json_log, indent=4)
             json_log.close()
+
+    def retrive_data(self, stationId, startDate, startTime):
+        file = 'pm25_'+stationId+'.json'
+        pm25 = stationId+'_PM2.5 (ug/m3)'
+        if os.path.isfile(file):
+            with open(file, 'r') as json_read:
+                dataset = json.load(json_read)
+                for data in dataset[-19:]:
+                    if data[pm25].replace('.', '', 1).isdigit():
+                        self.items_list.append(float(data[pm25]))
+                json_read.close()
 
     def run(self, stationId, startDate, startTime):
         endDate = datetime.now().strftime('%Y-%m-%d')
         endTime = datetime.now().strftime('%H:%M:%S')
         # Retrieving the data
+        self.retrive_data(stationId, startDate, startTime)
         data = self.get_pm25_info(
             stationId, startDate, startTime, endDate, endTime, 1)
         # Parsing it
@@ -111,7 +124,7 @@ class AqmthaiScraper:
             # Parsing it
             self.parse_pm25(data)
         self.save_data(stationId, endDate, endTime)
-        self.scaped_pm25[:] = []
+        self.scraped_pm25[:] = []
         self.items_list[:] = []
 
 
@@ -120,7 +133,7 @@ def check_last_scraping():
         with open('last_scraping_log.json', 'r') as json_log:
             log = json.load(json_log)
             startDate = log['lastDate']
-            startTime = log['lastTime']
+            startTime = log['lastTime'][:-2] + '1'
     else:
         startDate = '2018-01-01'
         startTime = '00:00:00'
