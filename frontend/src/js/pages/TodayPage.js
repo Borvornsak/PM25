@@ -1,5 +1,6 @@
 import React, { Component } from "react";
-import { Layout } from "antd";
+import { Layout, Row, Col } from "antd";
+import { ShowInfo, ShowChart } from "../components";
 
 const { Content } = Layout;
 
@@ -10,8 +11,8 @@ class TodayPage extends Component {
 
   render() {
     return (
-      <Content style={{ padding: "0 50px" }}>
-        <div
+      <Content style={{ display: "flex", justifyContent: "space-around" }}>
+        {/* <div
           style={{
             background: "#fff",
             padding: 24,
@@ -20,7 +21,20 @@ class TodayPage extends Component {
           }}
         >
           Today
-        </div>
+        </div> */}
+        <Row
+          type="flex"
+          justify="space-around"
+          align="middle"
+          style={{ width: "100vw" }}
+        >
+          <Col span={6}>
+            <ShowInfo />
+          </Col>
+          <Col span={14}>
+            <ShowChart />
+          </Col>
+        </Row>
       </Content>
     );
   }

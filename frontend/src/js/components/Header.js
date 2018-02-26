@@ -2,12 +2,13 @@ import React from "react";
 import { Layout, Row, Col, Menu, Icon } from "antd";
 import { Link } from "react-router-dom";
 import logo from "../../asset/science.svg";
+import { COLOR } from "../../styles/Color";
 
 const { Header } = Layout;
 
 const AppHeader = () => {
   return (
-    <Header>
+    <Header style={{ background: COLOR.secondaryConfido }}>
       <Row>
         <Col xs={{ span: 8 }} md={{ span: 2 }}>
           <img
@@ -22,7 +23,7 @@ const AppHeader = () => {
           />
         </Col>
         <Col xs={{ span: 16 }} md={{ span: 6 }}>
-          <h1 style={{ color: "white" }}>PM2.5 Tracker</h1>
+          <h1 style={{ color: "white" }}>PM2.5 Prediction</h1>
         </Col>
         <Col
           xs={{ span: 0 }}
@@ -33,7 +34,11 @@ const AppHeader = () => {
             theme="dark"
             mode="horizontal"
             defaultSelectedKeys={["1"]}
-            style={{ lineHeight: "64px", display: "flex" }}
+            style={{
+              lineHeight: "64px",
+              display: "flex",
+              background: COLOR.secondaryConfido
+            }}
           >
             <Menu.Item key="1">
               <Link to="/">
