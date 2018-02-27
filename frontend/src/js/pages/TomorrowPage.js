@@ -6,7 +6,7 @@ import prediction from "../../asset/prediction_values.json";
 const { Content } = Layout;
 
 const data = Object.values(prediction);
-const mean = data.slice(25, 50).reduce((a, b) => a + b, 0) / data.length;
+const mean = data.slice(25, 50).reduce((a, b) => a + b, 0) / 25;
 
 class TomorrowPage extends Component {
   render() {
