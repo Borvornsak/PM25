@@ -10,21 +10,29 @@ const data = Object.values(prediction);
 class TodayPage extends Component {
   constructor() {
     super();
+    this.state = {
+      time: new Date()
+    };
   }
+  setTime = () => {
+    this.setState({ time: new Date() });
+  };
 
+  componentWillMount = () => {
+    this.setTime();
+  };
+  componentDidMount = () => {
+    window.setInterval(
+      function() {
+        this.setTime();
+      }.bind(this),
+      1000
+    );
+  };
   render() {
+    const hour = this.state.time.getHours();
     return (
       <Content style={{ display: "flex", justifyContent: "space-around" }}>
-        {/* <div
-          style={{
-            background: "#fff",
-            padding: 24,
-            minHeight: "auto",
-            margin: "50px 0"
-          }}
-        >
-          Today
-        </div> */}
         <Row
           type="flex"
           justify="space-around"
@@ -32,7 +40,7 @@ class TodayPage extends Component {
           style={{ width: "100vw" }}
         >
           <Col span={6}>
-            <ShowInfo />
+            <ShowInfo pm25={data[hour]} />
           </Col>
           <Col span={14}>
             <ShowChart data={data.slice(0, 25)} />

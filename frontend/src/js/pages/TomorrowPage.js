@@ -1,26 +1,32 @@
 import React, { Component } from "react";
-import { Layout } from "antd";
+import { Layout, Row, Col } from "antd";
+import { ShowInfo, ShowChart } from "../components";
+import prediction from "../../asset/prediction_values.json";
 
 const { Content } = Layout;
 
-class TomorrowPage extends Component {
-  constructor() {
-    super();
-  }
+const data = Object.values(prediction);
+const mean = data.slice(25, 50).reduce((a, b) => a + b, 0) / data.length;
 
+class TomorrowPage extends Component {
   render() {
+    const hour = new Date().getHours();
+    console.log(hour);
     return (
-      <Content style={{ padding: "0 50px" }}>
-        <div
-          style={{
-            background: "#fff",
-            padding: 24,
-            minHeight: "auto",
-            margin: "50px 0"
-          }}
+      <Content style={{ display: "flex", justifyContent: "space-around" }}>
+        <Row
+          type="flex"
+          justify="space-around"
+          align="middle"
+          style={{ width: "100vw" }}
         >
-          Tomorrow
-        </div>
+          <Col span={6}>
+            <ShowInfo pm25={mean} showTime={false} />
+          </Col>
+          <Col span={14}>
+            <ShowChart data={data.slice(25, 50)} />
+          </Col>
+        </Row>
       </Content>
     );
   }

@@ -1,5 +1,4 @@
 import React from "react";
-import { Card } from "antd";
 import styled from "styled-components";
 import { COLOR } from "../../styles/Color";
 
@@ -26,35 +25,34 @@ const StateShow = styled.div`
   border-bottom-left-radius: 5px;
   border-bottom-right-radius: 5px;
   padding: 0.5em 1em;
-  background: ${props => (props.ratio <= 0.5 ? COLOR.valid : COLOR.cherry)};
+  background: ${props => (props.ratio <= 50 ? COLOR.valid : COLOR.cherry)};
   color: white;
   font-size: 1.5rem;
   text-align: center;
 `;
 
-const ShowInfo = ({ pm25 = 0 }) => {
+const ShowInfo = ({ pm25 = 0, showTime = true }) => {
   const now = new Date();
-  const ratio = pm25 / 50;
+  const precisionRound = (number, precision) => {
+    var factor = Math.pow(10, precision);
+    return Math.round(number * factor) / factor;
+  };
+
   return (
     <div>
-      {/* <Card bordered={false}>
-        <b>{now.toDateString()}</b>
-        <p>{pm25}</p>
-        <p>Card content</p>
-      </Card> */}
       <Container>
         <Information>
           <b>{now.toDateString()}</b>
-          <p>{now.toTimeString()}</p>
+          {showTime && <p>{now.toTimeString()}</p>}
           <h2>
             PM2.5<p style={{ fontSize: "1rem" }}>(Moving AVG 24 Hour)</p>
           </h2>
           <Quantity>
-            <p>{pm25} (ug/m3)</p>
+            <p>{precisionRound(pm25, 2)} (ug/m3)</p>
           </Quantity>
         </Information>
         <StateShow ratio={pm25}>
-          state : {pm25 <= 0.5 ? "Healthy" : "Unhealthy"}
+          state : {pm25 <= 50 ? "Healthy" : "Unhealthy"}
         </StateShow>
       </Container>
     </div>

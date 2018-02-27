@@ -1,5 +1,4 @@
 import React from "react";
-import { Card } from "antd";
 import styled from "styled-components";
 import { Line } from "react-chartjs-2";
 import { COLOR } from "../../styles/Color";
@@ -13,7 +12,13 @@ const Container = styled.div`
   padding: 2em 2em;
 `;
 
-const ShowChart = data => {
+const precisionRound = (number, precision) => {
+  var factor = Math.pow(10, precision);
+  return Math.round(number * factor) / factor;
+};
+
+const ShowChart = ({ data }) => {
+  const round_data = data.map(x => precisionRound(x, 2));
   const example_data = {
     labels: [
       "12PM",
@@ -40,7 +45,7 @@ const ShowChart = data => {
       "9PM",
       "10PM",
       "11PM",
-      "12AM"
+      "12PM"
     ],
     datasets: [
       {
@@ -48,37 +53,37 @@ const ShowChart = data => {
         fill: false,
         lineTension: 0.1,
         backgroundColor: "rgba(75,192,192,0.4)",
-        borderColor: "rgba(75,192,192,1)",
+        borderColor: COLOR.twitter,
         borderCapStyle: "butt",
         borderDash: [],
         borderDashOffset: 0.0,
         borderJoinStyle: "miter",
-        pointBorderColor: "rgba(75,192,192,1)",
+        pointBorderColor: COLOR.twitter,
         pointBackgroundColor: "#fff",
         pointBorderWidth: 1,
         pointHoverRadius: 5,
-        pointHoverBackgroundColor: "rgba(75,192,192,1)",
+        pointHoverBackgroundColor: COLOR.twitter,
         pointHoverBorderColor: "rgba(220,220,220,1)",
         pointHoverBorderWidth: 2,
         pointRadius: 1,
         pointHitRadius: 10,
-        data: data.data
+        data: round_data
       },
       {
         label: "Standard",
         fill: true,
         lineTension: 0.1,
-        backgroundColor: "rgba(75,192,192,0.4)",
-        borderColor: "rgba(75,192,192,1)",
+        backgroundColor: "rgba(174, 213, 129,0.4)",
+        borderColor: "rgba(139, 195, 74,1)",
         borderCapStyle: "butt",
         borderDash: [],
         borderDashOffset: 0.0,
         borderJoinStyle: "miter",
-        pointBorderColor: "rgba(75,192,192,1)",
+        pointBorderColor: "rgba(139, 195, 74,1)",
         pointBackgroundColor: "#fff",
         pointBorderWidth: 1,
         pointHoverRadius: 5,
-        pointHoverBackgroundColor: "rgba(75,192,192,1)",
+        pointHoverBackgroundColor: "rgba(139, 195, 74,1)",
         pointHoverBorderColor: "rgba(220,220,220,1)",
         pointHoverBorderWidth: 2,
         pointRadius: 1,
