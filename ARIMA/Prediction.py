@@ -59,7 +59,7 @@ bias = numpy.load('model_bias.npy')
 # make first prediction
 predictions = list()
 predictions = dataset[str(datetime.date.today()):].values.tolist()
-yhat = model_fit.forecast(steps=48)[0]
+yhat = model_fit.forecast(steps=240)[0]
 for y in yhat:
     y = bias + inverse_difference(history, float(y), hours_in_day)
     predictions.append(y[0])
